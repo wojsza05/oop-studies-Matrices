@@ -2,8 +2,6 @@ package pl.edu.mimuw.matrix;
 
 public class DoubleMatrixFactory {
 
-    // TODO Dodać testy, zwłaszcza na macierze constant, row, column, vector, których nie ma w testach.
-
     private DoubleMatrixFactory() {
     }
 
