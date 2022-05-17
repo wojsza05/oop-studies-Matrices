@@ -7,9 +7,17 @@ public class AntiDiagonalMatrix extends DiagonalMatrix {
 
     @Override
     public IDoubleMatrix times(double scalar) {
-        if (scalar == 1)
-            return this;
         return new AntiDiagonalMatrix(multiplyElementsOfTheArray(values, scalar));
+    }
+
+    @Override
+    public IDoubleMatrix plus(IDoubleMatrix other) {
+        assert other != null;
+        assert shape.equals(other.shape());
+
+        if (getClass() == other.getClass())
+            return new AntiDiagonalMatrix(sumTwoArrays(values, ((AntiDiagonalMatrix) other).values));
+        return super.plus(other);
     }
 
     @Override

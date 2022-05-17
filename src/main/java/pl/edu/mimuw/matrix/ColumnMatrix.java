@@ -11,9 +11,17 @@ public class ColumnMatrix extends RegularSparseMatrix {
 
     @Override
     public IDoubleMatrix times(double scalar) {
-        if (scalar == 1)
-            return this;
         return new ColumnMatrix(shape, multiplyElementsOfTheArray(values, scalar));
+    }
+
+    @Override
+    public IDoubleMatrix plus(IDoubleMatrix other) {
+        assert other != null;
+        assert shape.equals(other.shape());
+
+        if (getClass() == other.getClass())
+            return new ColumnMatrix(shape, sumTwoArrays(values, ((ColumnMatrix) other).values));
+        return super.plus(other);
     }
 
     @Override

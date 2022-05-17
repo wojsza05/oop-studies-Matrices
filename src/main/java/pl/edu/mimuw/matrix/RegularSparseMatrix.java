@@ -27,4 +27,14 @@ public abstract class RegularSparseMatrix extends AbstractMatrix {
             resultValues[i] *= scalar;
         return resultValues;
     }
+
+    protected double[] sumTwoArrays(double[] array1, double[] array2) {
+        // Sum two arrays with each other. They must be of equal length.
+        double[] resultArray = new double[array1.length];
+
+        for (int i = 0; i < array1.length; i++)
+            resultArray[i] = array1[i] + array2[i];
+
+        return resultArray;
+    }
 }

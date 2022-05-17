@@ -14,6 +14,10 @@ public abstract class AbstractMatrix implements IDoubleMatrix {
     public IDoubleMatrix times(IDoubleMatrix other) {
         assert other != null;
         assert shape.columns == other.shape().rows;
+
+        if (other.getClass() == ZeroMatrix.class)
+            return new ZeroMatrix(matrix(shape.rows, other.shape().columns));
+
         double[][] resultMatrix = new double[shape.rows][other.shape().columns];
         double[][] thisMatrix = this.data();
         double[][] otherMatrix = other.data();
@@ -30,6 +34,7 @@ public abstract class AbstractMatrix implements IDoubleMatrix {
     public IDoubleMatrix plus(IDoubleMatrix other) {
         assert other != null;
         assert shape.equals(other.shape());
+
         double[][] resultMatrix = this.data();
         double[][] otherMatrix = other.data();
 
@@ -42,9 +47,6 @@ public abstract class AbstractMatrix implements IDoubleMatrix {
 
     @Override
     public IDoubleMatrix plus(double scalar) {
-        if (scalar == 0)
-            return this;
-
         double[][] resultMatrix = this.data();
 
         for (int y = 0; y < shape.rows; y++)

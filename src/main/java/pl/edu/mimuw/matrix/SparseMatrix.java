@@ -35,30 +35,34 @@ public class SparseMatrix extends AbstractMatrix {
         Shape otherShape = other.shape();
         assert shape.columns == otherShape.rows;
 
-        ArrayList<MatrixCellValue> resultValues = new ArrayList<>();
-        int rowBegin = 0;
-        int position = 0;
-        while (rowBegin < cellValues.length) {
-            while (position < cellValues.length
-                    && cellValues[position].row == cellValues[rowBegin].row)
-                position++;
+        if (other.getClass() == SparseMatrix.class){
+            ArrayList<MatrixCellValue> resultValues = new ArrayList<>();
+            int rowBegin = 0;
+            int position = 0;
+            while (rowBegin < cellValues.length) {
+                while (position < cellValues.length
+                        && cellValues[position].row == cellValues[rowBegin].row)
+                    position++;
 
-            for (int x = 0; x < otherShape.columns; x++) {
-                double sum = 0;
-                for (int i = rowBegin; i < position; i++)
-                    sum += cellValues[i].value * other.get(cellValues[i].column, x);
-                resultValues.add(cell(cellValues[rowBegin].row, x, sum));
+                for (int x = 0; x < otherShape.columns; x++) {
+                    double sum = 0;
+                    for (int i = rowBegin; i < position; i++)
+                        sum += cellValues[i].value * other.get(cellValues[i].column, x);
+                    resultValues.add(cell(cellValues[rowBegin].row, x, sum));
+                }
+
+                rowBegin = position;
             }
 
-            rowBegin = position;
+            MatrixCellValue[] res = new MatrixCellValue[resultValues.size()];
+            position = 0;
+            for (MatrixCellValue cv: resultValues)
+                res[position++] = cv;
+
+            return new SparseMatrix(matrix(shape.rows, otherShape.columns), res);
         }
-
-        MatrixCellValue[] res = new MatrixCellValue[resultValues.size()];
-        position = 0;
-        for (MatrixCellValue cv: resultValues)
-            res[position++] = cv;
-
-        return new SparseMatrix(matrix(shape.rows, otherShape.columns), res);
+        else
+            return super.times(other);
     }
 
     @Override

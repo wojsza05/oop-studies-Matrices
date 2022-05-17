@@ -11,14 +11,31 @@ public class IdentityMatrix extends RegularSparseMatrix {
 
     @Override
     public IDoubleMatrix times(double scalar) {
-        if (scalar == 1)
-            return this;
-
         double[] resultValues = new double[shape.rows];
         for (int i = 0; i < shape.rows; i++)
             resultValues[i] = scalar;
 
         return new DiagonalMatrix(resultValues);
+    }
+
+    @Override
+    public IDoubleMatrix times(IDoubleMatrix other) {
+        assert other != null;
+        assert shape.columns == other.shape().rows;
+
+        if (other.getClass() == ZeroMatrix.class)
+            return new ZeroMatrix(matrix(shape.rows, other.shape().columns));
+
+        if (other.getClass() == DiagonalMatrix.class
+                || other.getClass() == IdentityMatrix.class) {
+            double[] resultValues = new double[values.length];
+
+            for (int i = 0; i < values.length; i++)
+                resultValues[i] = get(i, i) * other.get(i, i);
+
+            return new DiagonalMatrix(resultValues);
+        }
+        return super.times(other);
     }
 
     @Override

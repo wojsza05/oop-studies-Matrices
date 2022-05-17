@@ -5,6 +5,7 @@ import pl.edu.mimuw.matrix.MatrixCellValue;
 import pl.edu.mimuw.matrix.Shape;
 
 import static pl.edu.mimuw.matrix.DoubleMatrixFactory.*;
+import static pl.edu.mimuw.matrix.MatrixCellValue.cell;
 
 public class Main {
 
@@ -18,8 +19,8 @@ public class Main {
         MatrixCellValue[] cellValues = new MatrixCellValue[15];
         int position = 0;
         for (int i = 0; i < 15; i++) {
-            cellValues[position] = MatrixCellValue.cell
-                    (7 * position / 10, (7 * position) % 10, 7 * position + 3);
+            cellValues[position] = cell(7 * position / 10,
+                    (7 * position) % 10, 7 * position + 3);
             position++;
         }
 

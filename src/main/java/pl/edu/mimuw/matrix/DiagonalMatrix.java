@@ -11,9 +11,37 @@ public class DiagonalMatrix extends RegularSparseMatrix {
 
     @Override
     public IDoubleMatrix times(double scalar) {
-        if (scalar == 1)
-            return this;
         return new DiagonalMatrix(multiplyElementsOfTheArray(values, scalar));
+    }
+
+    @Override
+    public IDoubleMatrix times(IDoubleMatrix other) {
+        assert other != null;
+        assert shape.columns == other.shape().rows;
+
+        if (other.getClass() == ZeroMatrix.class)
+            return new ZeroMatrix(matrix(shape.rows, other.shape().columns));
+
+        if (getClass() == DiagonalMatrix.class && other.getClass() == DiagonalMatrix.class
+                || other.getClass() == IdentityMatrix.class) {
+            double[] resultValues = new double[values.length];
+
+            for (int i = 0; i < values.length; i++)
+                resultValues[i] = get(i, i) * other.get(i, i);
+
+            return new DiagonalMatrix(resultValues);
+        }
+        return super.times(other);
+    }
+
+    @Override
+    public IDoubleMatrix plus(IDoubleMatrix other) {
+        assert other != null;
+        assert shape.equals(other.shape());
+
+        if (getClass() == other.getClass())
+            return new DiagonalMatrix(sumTwoArrays(values, ((DiagonalMatrix) other).values));
+        return super.plus(other);
     }
 
     @Override
