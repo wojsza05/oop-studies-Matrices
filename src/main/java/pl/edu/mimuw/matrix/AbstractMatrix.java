@@ -2,6 +2,8 @@ package pl.edu.mimuw.matrix;
 
 import java.util.Arrays;
 
+import static pl.edu.mimuw.matrix.Shape.matrix;
+
 public abstract class AbstractMatrix implements IDoubleMatrix {
     protected Shape shape;
     protected double normOneValue = -1;
@@ -65,8 +67,7 @@ public abstract class AbstractMatrix implements IDoubleMatrix {
 
     @Override
     public Shape shape() {
-        //return shape;
-        return Shape.matrix(shape.rows, shape.columns);
+        return matrix(shape.rows, shape.columns);
     }
 
     @Override

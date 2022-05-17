@@ -35,11 +35,7 @@ public final class MatrixCellValue {
       if (a.column > b.column)
         return 1;
 
-      if (a.value < b.value)
-        return -1;
-      if (a.value > b.value)
-        return 1;
-      return 0;
+      return Double.compare(a.value, b.value);
     }
   }
 }

@@ -1,10 +1,12 @@
 package pl.edu.mimuw.matrix;
 
+import static pl.edu.mimuw.matrix.Shape.matrix;
+
 public class DiagonalMatrix extends RegularSparseMatrix {
 
     public DiagonalMatrix(double... diagonalValues) {
         super(diagonalValues);
-        shape = Shape.matrix(values.length, values.length);
+        shape = matrix(values.length, values.length);
     }
 
     @Override

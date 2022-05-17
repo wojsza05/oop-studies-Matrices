@@ -1,6 +1,10 @@
 package pl.edu.mimuw.matrix;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import pl.edu.mimuw.matrix.MatrixCellValue.CellValueComparator;
+import static pl.edu.mimuw.matrix.MatrixCellValue.cell;
+import static pl.edu.mimuw.matrix.Shape.matrix;
 
 public class SparseMatrix extends AbstractMatrix {
     private final MatrixCellValue[] cellValues;
@@ -13,8 +17,8 @@ public class SparseMatrix extends AbstractMatrix {
         }
 
         this.cellValues = Arrays.copyOf(values, values.length);
-        Arrays.sort(this.cellValues, new MatrixCellValue.CellValueComparator());
-        this.shape = Shape.matrix(shape.rows, shape.columns);
+        Arrays.sort(this.cellValues, new CellValueComparator());
+        this.shape = matrix(shape.rows, shape.columns);
 
         for (int i = 1; i < this.cellValues.length; i++)
             assert (this.cellValues[i].row != this.cellValues[i - 1].row
@@ -28,8 +32,33 @@ public class SparseMatrix extends AbstractMatrix {
     @Override
     public IDoubleMatrix times(IDoubleMatrix other) {
         assert other != null;
-        assert shape.columns == other.shape().rows;
-        return super.times(other); // TODO Zmienić
+        Shape otherShape = other.shape();
+        assert shape.columns == otherShape.rows;
+
+        ArrayList<MatrixCellValue> resultValues = new ArrayList<>();
+        int rowBegin = 0;
+        int position = 0;
+        while (rowBegin < cellValues.length) {
+            while (position < cellValues.length
+                    && cellValues[position].row == cellValues[rowBegin].row)
+                position++;
+
+            for (int x = 0; x < otherShape.columns; x++) {
+                double sum = 0;
+                for (int i = rowBegin; i < position; i++)
+                    sum += cellValues[i].value * other.get(cellValues[i].column, x);
+                resultValues.add(cell(cellValues[rowBegin].row, x, sum));
+            }
+
+            rowBegin = position;
+        }
+
+        MatrixCellValue[] res = new MatrixCellValue[resultValues.size()];
+        position = 0;
+        for (MatrixCellValue cv: resultValues)
+            res[position++] = cv;
+
+        return new SparseMatrix(matrix(shape.rows, otherShape.columns), res);
     }
 
     @Override
@@ -48,12 +77,12 @@ public class SparseMatrix extends AbstractMatrix {
             resultValues = new MatrixCellValue[count];
             int position = 0;
             for (MatrixCellValue cv: cellValues)
-                resultValues[position++] = MatrixCellValue.cell(cv.row,
+                resultValues[position++] = cell(cv.row,
                         cv.column, cv.value + other.get(cv.row, cv.column));
 
             for (MatrixCellValue cv: ((SparseMatrix)other).getCellValues())
                 if (this.get(cv.row, cv.column) == 0)
-                    resultValues[position++] = MatrixCellValue.cell(cv.row, cv.column, cv.value);
+                    resultValues[position++] = cell(cv.row, cv.column, cv.value);
 
             return new SparseMatrix(shape, resultValues);
         }
@@ -67,7 +96,7 @@ public class SparseMatrix extends AbstractMatrix {
         MatrixCellValue[] newValues = new MatrixCellValue[cellValues.length];
 
         for (int i = 0; i < cellValues.length; i++)
-            newValues[i] = MatrixCellValue.cell(cellValues[i].row,
+            newValues[i] = cell(cellValues[i].row,
                     cellValues[i].column, cellValues[i].value * scalar);
 
         return new SparseMatrix(shape, newValues);

@@ -1,5 +1,7 @@
 package pl.edu.mimuw.matrix;
 
+import static pl.edu.mimuw.matrix.Shape.matrix;
+
 public class FullMatrix extends AbstractMatrix {
     private final double[][] values;
 
@@ -10,7 +12,7 @@ public class FullMatrix extends AbstractMatrix {
         for (int i = 1; i < values.length; i++)
             assert values[i].length == values[0].length;
 
-        shape = Shape.matrix(values.length, values[0].length);
+        shape = matrix(values.length, values[0].length);
         this.values = copyTwoDimensionalArray(values);
     }
 

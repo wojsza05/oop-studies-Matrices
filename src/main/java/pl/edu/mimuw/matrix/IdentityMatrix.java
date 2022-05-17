@@ -1,10 +1,12 @@
 package pl.edu.mimuw.matrix;
 
+import static pl.edu.mimuw.matrix.Shape.matrix;
+
 public class IdentityMatrix extends RegularSparseMatrix {
 
     public IdentityMatrix(int size) {
         assert size > 0;
-        shape = Shape.matrix(size, size);
+        shape = matrix(size, size);
     }
 
     @Override

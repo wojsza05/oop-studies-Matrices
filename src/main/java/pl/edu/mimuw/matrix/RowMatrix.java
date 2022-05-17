@@ -1,10 +1,12 @@
 package pl.edu.mimuw.matrix;
 
+import static pl.edu.mimuw.matrix.Shape.matrix;
+
 public class RowMatrix extends RegularSparseMatrix {
     public RowMatrix(Shape shape, double... values) {
         super(values);
         assert values.length == shape.rows;
-        this.shape = Shape.matrix(shape.rows, shape.columns);
+        this.shape = matrix(shape.rows, shape.columns);
     }
 
     @Override

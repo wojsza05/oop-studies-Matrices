@@ -1,11 +1,13 @@
 package pl.edu.mimuw.matrix;
 
+import static pl.edu.mimuw.matrix.Shape.matrix;
+
 public class ConstantMatrix extends RegularSparseMatrix {
     protected double value;
 
     public ConstantMatrix(Shape shape, double value) {
         this.value = value;
-        this.shape = Shape.matrix(shape.rows, shape.columns);
+        this.shape = matrix(shape.rows, shape.columns);
     }
 
     @Override
